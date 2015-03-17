@@ -147,7 +147,7 @@ module Ltree
       end
 
       def ancestors
-        ltree_scope.where("#{ltree_path_column} @> ? AND #{ltree_fragment_column} != ?", ltree_path, ltree_fragment)
+        ltree_scope.where("#{ltree_path_column} @> ? AND #{self.class.table_name}.#{ltree_fragment_column} != ?", ltree_path, ltree_fragment)
       end
 
       def self_and_ancestors
@@ -156,7 +156,7 @@ module Ltree
       alias :and_ancestors :self_and_ancestors
 
       def siblings
-        ltree_scope.where("#{ltree_parent_fragment_column} = ? AND #{ltree_fragment_column} != ?", ltree_parent_fragment, ltree_fragment)
+        ltree_scope.where("#{ltree_parent_fragment_column} = ? AND #{self.class.table_name}.#{ltree_fragment_column} != ?", ltree_parent_fragment, ltree_fragment)
       end
 
       def self_and_siblings
@@ -165,7 +165,7 @@ module Ltree
       alias :and_siblings :self_and_siblings
 
       def descendents
-        ltree_scope.where("#{ltree_path_column} <@ ? AND #{ltree_fragment_column} != ?", ltree_path, ltree_fragment)
+        ltree_scope.where("#{ltree_path_column} <@ ? AND #{self.class.table_name}.#{ltree_fragment_column} != ?", ltree_path, ltree_fragment)
       end
 
       def self_and_descendents
