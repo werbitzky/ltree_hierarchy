@@ -118,9 +118,9 @@ module Ltree
         #  SET    path = NEW.path || subpath(path, nlevel(OLD.path))
         #  WHERE  path <@ OLD.path AND id != NEW.id;
         ltree_scope.where(
-          ["#{ltree_path_column} <@ :old_path AND #{ltree_fragment_column} != :id", :old_path => ltree_path_was, :id => ltree_fragment]
+          ["#{self.class.table_name}.#{ltree_path_column} <@ :old_path AND #{ltree_fragment_column} != :id", :old_path => ltree_path_was, :id => ltree_fragment]
         ).update_all(
-          ["#{ltree_path_column} = :new_path || subpath(#{ltree_path_column}, nlevel(:old_path))", :new_path => ltree_path, :old_path => ltree_path_was]
+          ["#{self.class.table_name}.#{ltree_path_column} = :new_path || subpath(#{ltree_path_column}, nlevel(:old_path))", :new_path => ltree_path, :old_path => ltree_path_was]
         )
       end
 
@@ -147,11 +147,11 @@ module Ltree
       end
 
       def ancestors
-        ltree_scope.where("#{ltree_path_column} @> ? AND #{self.class.table_name}.#{ltree_fragment_column} != ?", ltree_path, ltree_fragment)
+        ltree_scope.where("#{self.class.table_name}.#{ltree_path_column} @> ? AND #{self.class.table_name}.#{ltree_fragment_column} != ?", ltree_path, ltree_fragment)
       end
 
       def self_and_ancestors
-        ltree_scope.where("#{ltree_path_column} @> ?", ltree_path)
+        ltree_scope.where("#{self.class.table_name}.#{ltree_path_column} @> ?", ltree_path)
       end
       alias :and_ancestors :self_and_ancestors
 
@@ -165,11 +165,11 @@ module Ltree
       alias :and_siblings :self_and_siblings
 
       def descendents
-        ltree_scope.where("#{ltree_path_column} <@ ? AND #{self.class.table_name}.#{ltree_fragment_column} != ?", ltree_path, ltree_fragment)
+        ltree_scope.where("#{self.class.table_name}.#{ltree_path_column} <@ ? AND #{self.class.table_name}.#{ltree_fragment_column} != ?", ltree_path, ltree_fragment)
       end
 
       def self_and_descendents
-        ltree_scope.where("#{ltree_path_column} <@ ?", ltree_path)
+        ltree_scope.where("#{self.class.table_name}.#{ltree_path_column} <@ ?", ltree_path)
       end
       alias :and_descendents :self_and_descendents
 
