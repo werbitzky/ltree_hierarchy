@@ -118,9 +118,9 @@ module Ltree
         #  SET    path = NEW.path || subpath(path, nlevel(OLD.path))
         #  WHERE  path <@ OLD.path AND id != NEW.id;
         ltree_scope.where(
-          ["#{self.class.table_name}.#{ltree_path_column} <@ :old_path AND #{ltree_fragment_column} != :id", :old_path => ltree_path_was, :id => ltree_fragment]
+          ["#{ltree_path_column} <@ :old_path AND #{ltree_fragment_column} != :id", :old_path => ltree_path_was, :id => ltree_fragment]
         ).update_all(
-          ["#{self.class.table_name}.#{ltree_path_column} = :new_path || subpath(#{ltree_path_column}, nlevel(:old_path))", :new_path => ltree_path, :old_path => ltree_path_was]
+          ["#{ltree_path_column} = :new_path || subpath(#{ltree_path_column}, nlevel(:old_path))", :new_path => ltree_path, :old_path => ltree_path_was]
         )
       end
 
